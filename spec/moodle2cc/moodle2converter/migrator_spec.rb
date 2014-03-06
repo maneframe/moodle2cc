@@ -9,12 +9,17 @@ module Moodle2CC
     let(:canvas_page) { CanvasCC::Model::Page.new }
     let(:canvas_discussion) { CanvasCC::Discussion.new }
     let(:canvas_discussion) { CanvasCC::Assignment.new }
+    let(:files) { [
+        double('file_1', content_hash: 'a'),
+        double('file_1', content_hash: 'a'),
+        double('file_1', content_hash: 'b')
+    ] }
 
     before(:each) do
       extractor = double('extractor', extract: nil)
       extractor.stub(:extract).and_yield(double('moodle_course',
                                                 sections: [:section1, :section2],
-                                                files: [:file1, :file2],
+                                                files: files,
                                                 pages: [:page1, :page2],
                                                 forums: [:forum1, :forum2],
                                                 assignments: [:assignment1, :assignment2]
