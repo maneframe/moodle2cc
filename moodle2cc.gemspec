@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Migrates Moodle backup ZIP to IMS Common Cartridge package}
   gem.homepage      = "https://github.com/instructure/moodle2cc"
 
-  gem.add_runtime_dependency "rubyzip", '~> 1.0.0'
+  gem.add_runtime_dependency "rubyzip"
   gem.add_runtime_dependency "happymapper"
   gem.add_runtime_dependency "builder"
   gem.add_runtime_dependency "thor"
@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "guard-bundler"
   gem.add_development_dependency "guard-minitest"
   gem.add_development_dependency "guard-rspec"
+  gem.add_development_dependency "debugger"
 
 
   gem.files         = `git ls-files`.split($\)
