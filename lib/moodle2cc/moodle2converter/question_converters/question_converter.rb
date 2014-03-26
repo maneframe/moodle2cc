@@ -10,7 +10,11 @@ module Moodle2CC::Moodle2Converter
         @@subclasses[name] = self
       end
 
-      STANDARD_CONVERSIONS = {'essay' => 'essay_question', 'shortanswer' => 'short_answer_question'}
+      STANDARD_CONVERSIONS = {
+        'essay' => 'essay_question',
+        'multichoice' => 'multiple_choice_question',
+        'shortanswer' => 'short_answer_question'
+      }
 
       def convert(moodle_question)
         type = moodle_question.type
@@ -26,9 +30,12 @@ module Moodle2CC::Moodle2Converter
       def convert_question(moodle_question, question_type = nil)
         canvas_question = create_canvas_question(question_type)
         canvas_question.identifier = moodle_question.id
+        canvas_question.assessment_question_identifierref = "question_#{moodle_question.id}"
         canvas_question.title = moodle_question.name
         canvas_question.general_feedback = moodle_question.general_feedback
-        canvas_question.answers = moodle_question.answers
+        canvas_question.answers = moodle_question.answers.map do |moodle_answer|
+           Moodle2CC::CanvasCC::Models::Answer.new(moodle_answer)
+        end
         canvas_question.material = convert_question_text(moodle_question)
         canvas_question
       end
