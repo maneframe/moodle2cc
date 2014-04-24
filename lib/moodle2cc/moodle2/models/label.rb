@@ -3,6 +3,7 @@ module Moodle2CC::Moodle2::Models
     attr_accessor :id, :module_id, :name, :intro, :intro_format, :visible
 
     DEFAULT_PAGE_TITLE = "Untitled Page"
+    MAX_HEADER_LENGTH = 250
 
     def name_text
       @name_text ||= (Nokogiri::HTML(@name.to_s).text.strip rescue "")
@@ -38,9 +39,9 @@ module Moodle2CC::Moodle2::Models
       @converted_title = name_text
 
       if @converted_title == "Label" || @converted_title.end_with?("...") || @converted_title.length == 0
-        if intro_text.length > 80
+        if intro_text.length > MAX_HEADER_LENGTH
 
-          @converted_title = intro_text[0..79] + "..."
+          @converted_title = intro_text[0..(MAX_HEADER_LENGTH - 1)] + "..."
           @convert_to_page = true
         else
           if intro_text.length > 0

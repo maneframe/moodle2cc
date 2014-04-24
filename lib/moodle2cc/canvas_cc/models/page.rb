@@ -28,6 +28,7 @@ module Moodle2CC::CanvasCC::Models
     end
 
     def self.convert_name_to_url(name)
+      name = name[0..79] if name.length > 80
       CGI::escape(name.downcase.gsub(/\s/, '-').gsub('.', 'dot'))
     end
 

@@ -40,9 +40,9 @@ module Moodle2CC::Moodle2::Models
 
       it 'should truncate the intro text if it is too long' do
         subject.name = '<hr>'
-        subject.intro = ("a" * 90)
+        subject.intro = ("a" * (Moodle2CC::Moodle2::Models::Label::MAX_HEADER_LENGTH + 20))
 
-        expect(subject.converted_title).to eq (("a" * 80) + '...')
+        expect(subject.converted_title).to eq (("a" * Moodle2CC::Moodle2::Models::Label::MAX_HEADER_LENGTH) + '...')
         expect(subject.convert_to_page?).to eq true
         expect(subject.convert_to_header?).to eq false
       end
