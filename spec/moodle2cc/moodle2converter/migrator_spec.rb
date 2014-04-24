@@ -200,6 +200,42 @@ module Moodle2CC
             expect(page1.title).to eq 'page title-3'
           end
         end
+
+        it 'converts assessment questions' do
+          assmt = Moodle2CC::CanvasCC::Models::Assessment.new
+          q1 = Moodle2CC::CanvasCC::Models::Question.new
+          a1 = Moodle2CC::CanvasCC::Models::Answer.new
+          q1.answers = [a1]
+
+          q_group = Moodle2CC::CanvasCC::Models::QuestionGroup.new
+          q2 = Moodle2CC::CanvasCC::Models::Question.new
+          a2 = Moodle2CC::CanvasCC::Models::Answer.new
+          q2.answers = [a2]
+          q_group.questions = [q2]
+
+          assmt.items = [q1, q_group]
+          canvas_course.assessments = [assmt]
+          migrator.migrate
+
+          expect(q1.material).to eq 'converted_html'
+          expect(q2.material).to eq 'converted_html'
+          expect(a1.answer_text).to eq 'converted_html'
+          expect(a2.answer_text).to eq 'converted_html'
+        end
+
+        it 'converts question bank questions' do
+          qb = Moodle2CC::CanvasCC::Models::QuestionBank.new
+          q1 = Moodle2CC::CanvasCC::Models::Question.new
+          a1 = Moodle2CC::CanvasCC::Models::Answer.new
+          q1.answers = [a1]
+          qb.questions = [q1]
+
+          canvas_course.question_banks = [qb]
+          migrator.migrate
+
+          expect(q1.material).to eq 'converted_html'
+          expect(a1.answer_text).to eq 'converted_html'
+        end
       end
     end
 
