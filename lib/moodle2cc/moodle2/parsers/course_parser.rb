@@ -11,18 +11,22 @@ module Moodle2CC::Moodle2::Parsers
 
     def parse
       course = Moodle2CC::Moodle2::Models::Course.new
-      File.open(File.join(@backup_folder, COURSE_XML_PATH)) do |f|
-        course_doc = Nokogiri::XML(f)
-        course.course_id = course_doc.at_xpath('/course/@id').value
-        course.id_number = parse_text(course_doc, '/course/idnumber')
-        course.fullname = parse_text(course_doc, '/course/fullname')
-        course.shortname = parse_text(course_doc, '/course/shortname')
-        course.summary = parse_text(course_doc, '/course/summary')
-        course.show_grades = parse_boolean(course_doc, '/course/showgrades')
-        if unix_start_date = parse_text(course_doc, '/course/startdate')
-          course.startdate = Time.at(unix_start_date.to_i)
+      course_path = File.join(@backup_folder, COURSE_XML_PATH)
+      if File.exists?(course_path)
+        File.open(course_path) do |f|
+          course_doc = Nokogiri::XML(f)
+          course.course_id = course_doc.at_xpath('/course/@id').value
+          course.id_number = parse_text(course_doc, '/course/idnumber')
+          course.fullname = parse_text(course_doc, '/course/fullname')
+          course.shortname = parse_text(course_doc, '/course/shortname')
+          course.summary = parse_text(course_doc, '/course/summary')
+          course.show_grades = parse_boolean(course_doc, '/course/showgrades')
+          if unix_start_date = parse_text(course_doc, '/course/startdate')
+            course.startdate = Time.at(unix_start_date.to_i)
+          end
         end
       end
+
 
       File.open(File.join(@backup_folder, SCALES_XML_PATH)) do |f|
         scales_doc = Nokogiri::XML(f)
